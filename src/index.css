@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Tokens de design. Fase 1 amplia esta lista (severidade, modo noturno). */
+@theme {
+  --font-sans: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --color-fundo: #EDF1F4;
+  --color-superficie: #FFFFFF;
+  --color-tinta: #14232E;
+  --color-secundario: #526270;
+  --color-linha: #CFD8DF;
+  --color-marca: #0E5A6B;
+}
+
+body {
+  background: var(--color-fundo);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  font-size: 17px;
+}
