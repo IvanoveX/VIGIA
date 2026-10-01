@@ -56,6 +56,7 @@ export function criarEstadoInicial() {
     dica: null,
     celular: null,
     contador: 0,
+    filtros: { torre: 'todas', plantao: 'atual', origem: 'todas', desfecho: 'todos' },
   }
 }
 
@@ -209,8 +210,8 @@ export function reducer(state, a) {
       }
     }
 
-    case 'HISTORICO_VISTO':
-      return state.etapa === TOTAL_ETAPAS ? { ...state, fimCenario: true } : state
+    case 'FILTRO':
+      return { ...state, filtros: { ...state.filtros, [a.campo]: a.valor } }
 
     case 'BASTIDORES':
       return { ...state, bastidores: a.evento }

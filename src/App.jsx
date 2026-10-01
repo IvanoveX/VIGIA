@@ -4,6 +4,7 @@ import Cabecalho from './components/Cabecalho.jsx'
 import { reducer, criarEstadoInicial } from './estado/reducer.js'
 import Painel from './components/Painel.jsx'
 import DetalheLeito from './components/DetalheLeito.jsx'
+import Historico from './components/Historico.jsx'
 import { alertasDaTorre } from './estado/seletores.js'
 import { indicadorEtapa } from './data/cenario.js'
 import { TORRES } from './data/hospital.js'
@@ -83,7 +84,7 @@ export default function App() {
       <main className="flex-1 px-4 py-3">
         {state.aba === 'painel' && !state.leitoAberto && <Painel state={state} agora={agora} agir={agir} />}
         {state.aba === 'painel' && state.leitoAberto && <DetalheLeito state={state} agora={agora} agir={agir} />}
-        {state.aba === 'historico' && <p className="text-secundario">Histórico de eventos: chega na Fase 4.</p>}
+        {state.aba === 'historico' && <Historico state={state} agir={agir} />}
         {state.aba === 'projeto' && <p className="text-secundario">Página do projeto: chega na Fase 5.</p>}
       </main>
     </div>
