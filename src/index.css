@@ -1,19 +1,108 @@
 @import "tailwindcss";
 
-/* Tokens de design. Fase 1 amplia esta lista (severidade, modo noturno). */
-@theme {
+/* Tokens como variáveis CSS: o modo noturno (P2) só troca os valores. */
+:root {
+  --fundo: #edf1f4;
+  --superficie: #ffffff;
+  --superficie-2: #f6f8fa;
+  --tinta: #14232e;
+  --secundario: #526270;
+  --linha: #cfd8df;
+  --marca: #0e5a6b;
+  --faixa: #14232e;
+  --faixa-texto: #edf1f4;
+
+  /* Severidade: sólidas, não pastel (o projetor lava cores claras). */
+  --ambar: #f2b200;
+  --ambar-texto: #2a1e00;
+  --laranja: #ea580c;
+  --laranja-texto: #1c0a00;
+  --vermelho: #c62828;
+  --vermelho-texto: #ffffff;
+  --contexto: #3f5aa8;
+  --sensor: #8a98a3;
+  --sensor-fundo: #e3e8ec;
+}
+
+:root[data-tema="noturno"] {
+  --fundo: #0f1a22;
+  --superficie: #16242e;
+  --superficie-2: #1b2b36;
+  --tinta: #e6edf2;
+  --secundario: #9aabb8;
+  --linha: #2c3f4c;
+  --marca: #5fb3c4;
+  --faixa: #070d12;
+  --faixa-texto: #d5dee5;
+  --contexto: #8ea5ec;
+  --sensor: #7f8f9b;
+  --sensor-fundo: #22323d;
+}
+
+@theme inline {
   --font-sans: "Atkinson Hyperlegible Next", system-ui, sans-serif;
-  --color-fundo: #EDF1F4;
-  --color-superficie: #FFFFFF;
-  --color-tinta: #14232E;
-  --color-secundario: #526270;
-  --color-linha: #CFD8DF;
-  --color-marca: #0E5A6B;
+  --color-fundo: var(--fundo);
+  --color-superficie: var(--superficie);
+  --color-superficie-2: var(--superficie-2);
+  --color-tinta: var(--tinta);
+  --color-secundario: var(--secundario);
+  --color-linha: var(--linha);
+  --color-marca: var(--marca);
+  --color-faixa: var(--faixa);
+  --color-faixa-texto: var(--faixa-texto);
+  --color-ambar: var(--ambar);
+  --color-ambar-texto: var(--ambar-texto);
+  --color-laranja: var(--laranja);
+  --color-laranja-texto: var(--laranja-texto);
+  --color-vermelho: var(--vermelho);
+  --color-vermelho-texto: var(--vermelho-texto);
+  --color-contexto: var(--contexto);
+  --color-sensor: var(--sensor);
+  --color-sensor-fundo: var(--sensor-fundo);
+}
+
+html {
+  font-size: 17px;
 }
 
 body {
-  background: var(--color-fundo);
-  color: var(--color-tinta);
+  background: var(--fundo);
+  color: var(--tinta);
   font-family: var(--font-sans);
-  font-size: 17px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Algarismos de largura fixa em horários e contadores. */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Foco sempre visível, na cor da marca. */
+:focus-visible {
+  outline: 3px solid var(--marca);
+  outline-offset: 2px;
+}
+
+/* Só laranja e vermelho se movem. */
+@keyframes pulso-ponto {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+@keyframes pulso-vermelho {
+  0%, 100% { background-color: var(--vermelho); }
+  50% { background-color: #a51f1f; }
+}
+.pulso-ponto {
+  animation: pulso-ponto 2s ease-in-out infinite;
+}
+.pulso-vermelho {
+  animation: pulso-vermelho 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulso-ponto,
+  .pulso-vermelho {
+    animation: none;
+  }
 }
