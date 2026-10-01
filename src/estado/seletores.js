@@ -1,6 +1,6 @@
 // Leituras derivadas do estado global.
 import { LEITOS, postoPorId } from '../data/hospital.js'
-import { avaliar } from '../data/estados.js'
+import { ESTADOS, avaliar } from '../data/estados.js'
 
 // Estado exibido, considerando pausas vencidas.
 export function estadoVisivel(d, agora) {
@@ -8,22 +8,32 @@ export function estadoVisivel(d, agora) {
   return d.estado
 }
 
-// Alertas de um conjunto de leitos, ordenados por prioridade e depois por tempo (mais antigo primeiro).
+// Tom visual depois da atenuação: prioridade 3 é âmbar; só registro fica calmo.
+export function tomEfetivo(estado, efeito) {
+  if (!efeito.atenuado) return ESTADOS[estado].tom
+  return efeito.prioridade === 3 ? 'ambar' : 'calmo'
+}
+
+export function situacao(state, id, agora) {
+  const d = state.leitos[id]
+  const estado = estadoVisivel(d, agora)
+  const efeito = avaliar(estado, d.acompanhante)
+  return { id, leito: LEITOS[id], d, estado, ...efeito, tom: tomEfetivo(estado, efeito) }
+}
+
+// Alertas de um conjunto de leitos, por prioridade e depois por tempo (mais antigo primeiro).
 export function alertas(state, ids, agora) {
   const ativos = []
   const atenuados = []
   for (const id of ids) {
-    const d = state.leitos[id]
-    if (!d) continue
-    const estado = estadoVisivel(d, agora)
-    const efeito = avaliar(estado, d.acompanhante)
-    const item = { id, leito: LEITOS[id], d, estado, ...efeito }
-    if (efeito.prioridade != null) ativos.push(item)
-    else if (efeito.registro) atenuados.push(item)
+    if (!state.leitos[id]) continue
+    const s = situacao(state, id, agora)
+    if (s.prioridade != null) ativos.push(s)
+    else if (s.registro) atenuados.push(s)
   }
-  const ordem = (a, b) => a.prioridade - b.prioridade || a.d.desde - b.d.desde
-  ativos.sort(ordem)
-  atenuados.sort((a, b) => a.d.desde - b.d.desde)
+  const inicio = (s) => s.d.primeiroSinal ?? s.d.desde
+  ativos.sort((a, b) => a.prioridade - b.prioridade || inicio(a) - inicio(b))
+  atenuados.sort((a, b) => inicio(a) - inicio(b))
   return { ativos, atenuados }
 }
 
@@ -31,7 +41,9 @@ export function alertasDoPosto(state, postoId, agora) {
   return alertas(state, postoPorId(postoId).leitos, agora)
 }
 
+// Contador do seletor de torre: quantidade e tom do alerta mais grave.
 export function alertasDaTorre(state, torre, agora) {
   const ids = Object.keys(state.leitos).filter((id) => LEITOS[id].torre === torre)
-  return alertas(state, ids, agora).ativos.length
+  const { ativos } = alertas(state, ids, agora)
+  return { qtd: ativos.length, tom: ativos[0]?.tom }
 }

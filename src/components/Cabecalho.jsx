@@ -1,6 +1,7 @@
 import { LayoutGrid, History, FileText } from 'lucide-react'
 import Marca from './Marca.jsx'
 import Relogio from './Relogio.jsx'
+import { TONS } from './Selo.jsx'
 import { TORRES, postosDaTorre, nomeAndar } from '../data/hospital.js'
 
 const ABAS = [
@@ -44,7 +45,7 @@ export default function Cabecalho({ aba, torre, posto, agora, alertasPorTorre, o
           <span className="text-[15px] text-secundario">Torre</span>
           {TORRES.map((t) => {
             const ativa = t.numero === torre
-            const qtd = alertasPorTorre[t.numero] || 0
+            const { qtd = 0, tom } = alertasPorTorre[t.numero] || {}
             return (
               <button
                 key={t.numero}
@@ -58,7 +59,7 @@ export default function Cabecalho({ aba, torre, posto, agora, alertasPorTorre, o
               >
                 {t.numero}
                 {qtd > 0 && (
-                  <span className="num inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ambar px-1 text-[13px] text-ambar-texto">
+                  <span className={`num inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[13px] leading-none ${TONS[tom] || TONS.ambar}`}>
                     {qtd}
                   </span>
                 )}
