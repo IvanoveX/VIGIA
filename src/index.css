@@ -106,3 +106,12 @@ body {
     animation: none;
   }
 }
+
+/* Notificação do celular desliza ao entrar. */
+@keyframes celular-entra {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.celular-entra {
+  animation: celular-entra 400ms ease-out;
+}

@@ -1,10 +1,10 @@
-import { ArrowLeft, Wifi, WifiOff, Footprints, Check, X, Pause, Bell, Smartphone } from 'lucide-react'
+import { ArrowLeft, Wifi, WifiOff, Footprints, Check, X, Pause, Bell, Smartphone, Layers } from 'lucide-react'
 import EsqueletoAnimado from './Esqueleto.jsx'
 import { SequenciaFases, LinhaTempo } from './Sequencia.jsx'
 import Selo from './Selo.jsx'
 import { LEITOS, descreverLocal } from '../data/hospital.js'
 import { ESTADOS, FASES, avaliar } from '../data/estados.js'
-import { situacao, tomEfetivo } from '../estado/seletores.js'
+import { situacao, tomEfetivo, eventoDoLeito } from '../estado/seletores.js'
 import { decimal, duracao, horario, minutosRestantes } from '../lib/formato.js'
 
 const CANAL = { painel: { rotulo: 'Painel', icone: Bell }, celular: { rotulo: 'Celular do plantão', icone: Smartphone } }
@@ -93,6 +93,13 @@ export default function DetalheLeito({ state, agora, agir }) {
         {/* Painel de estado */}
         <section className="flex flex-col gap-2 rounded border border-linha bg-superficie p-3" aria-label="Estado do leito">
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => agir({ type: 'BASTIDORES', evento: eventoDoLeito(state, id, agora) })}
+              className="order-last ml-auto inline-flex min-h-11 items-center gap-1.5 rounded border border-linha px-2.5 text-[15px] font-bold hover:border-secundario"
+            >
+              <Layers className="size-4.5" aria-hidden="true" /> Ver bastidores
+            </button>
             {d.atendido && estado === 'repouso' ? (
               <span className="inline-flex items-center gap-1.5 rounded border-2 border-marca px-2 py-1 font-bold text-marca">
                 {d.atendido.desfecho === 'Falso alarme' ? <X className="size-5" aria-hidden="true" /> : <Check className="size-5" aria-hidden="true" />}{' '}

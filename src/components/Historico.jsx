@@ -50,7 +50,7 @@ export default function Historico({ state, agir }) {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold leading-tight">Histórico de eventos</h1>
-          <p className="text-secundario">Somente metadados. Nenhuma imagem é armazenada.</p>
+          <p className="text-secundario">Somente metadados. Nenhuma imagem é armazenada. Clique numa linha para ver os bastidores.</p>
         </div>
         <div className="flex flex-wrap items-end gap-3">
           <Filtro rotulo="Torre" valor={f.torre} onChange={filtrar('torre')} opcoes={[['todas', 'Todas'], ...TORRES.map((t) => [String(t.numero), `Torre ${t.numero}`])]} />
@@ -84,7 +84,19 @@ export default function Historico({ state, agir }) {
             {eventos.map((e) => {
               const leito = LEITOS[e.leito]
               return (
-                <tr key={e.id} className={`border-t border-linha ${e.criadoNaDemo ? 'bg-marca/[0.07]' : ''}`}>
+                <tr
+                  key={e.id}
+                  tabIndex={0}
+                  onClick={() => agir({ type: 'BASTIDORES', evento: e })}
+                  onKeyDown={(k) => {
+                    if (k.key === 'Enter' || k.key === ' ') {
+                      k.preventDefault()
+                      agir({ type: 'BASTIDORES', evento: e })
+                    }
+                  }}
+                  aria-label={`Leito ${e.numero}, ${e.horario}: ver bastidores`}
+                  className={`cursor-pointer border-t border-linha hover:bg-superficie-2 ${e.criadoNaDemo ? 'bg-marca/[0.07]' : ''}`}
+                >
                   <td className="num px-3 py-2 font-bold">{e.horario}</td>
                   <td className="px-3 py-2 leading-tight">
                     <span className="block text-lg font-bold">{e.numero}</span>

@@ -84,7 +84,7 @@ export function mudarEstado(d, novo, t, confianca = null) {
     if (!r.pico || FASES.indexOf(novo) > FASES.indexOf(r.pico)) r.pico = novo
     const avisos = []
     if (efeito.canais.includes('painel')) avisos.push({ canal: 'painel', t })
-    if (efeito.canais.includes('celular')) avisos.push({ canal: 'celular', t: t + 4 })
+    if (efeito.canais.includes('celular')) avisos.push({ canal: 'celular', t: t + 2 })
     r.notificacoes = [...r.notificacoes, ...avisos]
     r.marcadores = [...r.marcadores, ...avisos.map((a) => ({ tipo: 'notificacao', canal: a.canal, t: a.t }))]
   }

@@ -1,6 +1,8 @@
 // Leituras derivadas do estado global.
 import { LEITOS, postoPorId } from '../data/hospital.js'
-import { ESTADOS, avaliar } from '../data/estados.js'
+import { ESTADOS, FASES, avaliar } from '../data/estados.js'
+import { criarEvento } from '../data/eventos.js'
+import { horario } from '../lib/formato.js'
 
 // Estado exibido, considerando pausas vencidas.
 export function estadoVisivel(d, agora) {
@@ -46,4 +48,22 @@ export function alertasDaTorre(state, torre, agora) {
   const ids = Object.keys(state.leitos).filter((id) => LEITOS[id].torre === torre)
   const { ativos } = alertas(state, ids, agora)
   return { qtd: ativos.length, tom: ativos[0]?.tom }
+}
+
+// Evento mostrado nos Bastidores a partir do detalhe: o evento registrado ou o sinal em andamento.
+export function eventoDoLeito(state, id, agora) {
+  const d = state.leitos[id]
+  const l = LEITOS[id]
+  if (d.atendido) {
+    const salvo = state.eventos.find((e) => e.id === d.atendido.eventoId)
+    if (salvo) return salvo
+  }
+  const sinal = d.primeiroSinal != null && FASES.includes(d.estado) && d.estado !== 'repouso'
+  const estado = sinal ? d.estado : 'repouso'
+  const efeito = avaliar(estado, d.acompanhante)
+  const desfecho = !sinal ? 'Sem alerta' : efeito.registro ? 'Registrado (atenuado)' : 'Aguardando atendimento'
+  const ev = criarEvento('detalhe', horario(sinal ? d.primeiroSinal : agora), 'atual', l.torre, l.numero, estado, sinal ? d.confianca : 0.92, null, desfecho, {
+    atenuado: efeito.atenuado,
+  })
+  return { ...ev, bastidores: { ...ev.bastidores, pausado: d.estado === 'pausado' } }
 }

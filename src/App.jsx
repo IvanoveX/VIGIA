@@ -5,6 +5,9 @@ import { reducer, criarEstadoInicial } from './estado/reducer.js'
 import Painel from './components/Painel.jsx'
 import DetalheLeito from './components/DetalheLeito.jsx'
 import Historico from './components/Historico.jsx'
+import Projeto from './components/Projeto.jsx'
+import Bastidores from './components/Bastidores.jsx'
+import CelularPlantao from './components/CelularPlantao.jsx'
 import { alertasDaTorre } from './estado/seletores.js'
 import { indicadorEtapa } from './data/cenario.js'
 import { TORRES } from './data/hospital.js'
@@ -45,13 +48,16 @@ export default function App() {
     setAgora(INICIO_RELOGIO)
     dispatch({ type: 'REINICIAR' })
   }, [])
+  const fecharBastidores = useCallback(() => dispatch({ type: 'BASTIDORES', evento: null }), [])
   const proxima = useCallback(() => agir({ type: 'PROXIMA_ETAPA' }), [agir])
 
   // Atalhos: seta para a direita, R e F. Ignorados em campos de texto.
   useEffect(() => {
     function aoTeclar(e) {
       if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || campoDeTexto(e.target)) return
-      if (e.key === 'ArrowRight') {
+      if (e.key === 'Escape') {
+        fecharBastidores()
+      } else if (e.key === 'ArrowRight') {
         e.preventDefault()
         proxima()
       } else if (e.key === 'r' || e.key === 'R') {
@@ -64,7 +70,10 @@ export default function App() {
     }
     window.addEventListener('keydown', aoTeclar)
     return () => window.removeEventListener('keydown', aoTeclar)
-  }, [proxima, reiniciar])
+  }, [proxima, reiniciar, fecharBastidores])
+
+  // Celular do plantão: aparece 2 s depois do alerta e some 6 s depois.
+  const celularVisivel = state.celular && agora >= state.celular.t + 2 && agora < state.celular.t + 8
 
   const alertasPorTorre = Object.fromEntries(TORRES.map((t) => [t.numero, alertasDaTorre(state, t.numero, agora)]))
 
@@ -85,8 +94,10 @@ export default function App() {
         {state.aba === 'painel' && !state.leitoAberto && <Painel state={state} agora={agora} agir={agir} />}
         {state.aba === 'painel' && state.leitoAberto && <DetalheLeito state={state} agora={agora} agir={agir} />}
         {state.aba === 'historico' && <Historico state={state} agir={agir} />}
-        {state.aba === 'projeto' && <p className="text-secundario">Página do projeto: chega na Fase 5.</p>}
+        {state.aba === 'projeto' && <Projeto />}
       </main>
+      {celularVisivel && <CelularPlantao key={state.celular.t} aviso={state.celular} />}
+      {state.bastidores && <Bastidores evento={state.bastidores} onFechar={fecharBastidores} />}
     </div>
   )
 }
