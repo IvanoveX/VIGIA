@@ -3,10 +3,10 @@ import FaixaDemo from './components/FaixaDemo.jsx'
 import Cabecalho from './components/Cabecalho.jsx'
 import { reducer, criarEstadoInicial } from './estado/reducer.js'
 import Painel from './components/Painel.jsx'
-import { ArrowLeft } from 'lucide-react'
+import DetalheLeito from './components/DetalheLeito.jsx'
 import { alertasDaTorre } from './estado/seletores.js'
 import { indicadorEtapa } from './data/cenario.js'
-import { TORRES, LEITOS } from './data/hospital.js'
+import { TORRES } from './data/hospital.js'
 import { INICIO_RELOGIO } from './lib/formato.js'
 
 function alternarTelaCheia() {
@@ -80,26 +80,12 @@ export default function App() {
         onTorre={(torre) => agir({ type: 'TORRE', torre })}
         onPosto={(posto) => agir({ type: 'POSTO', posto })}
       />
-      <main className="flex-1 p-4">
+      <main className="flex-1 px-4 py-3">
         {state.aba === 'painel' && !state.leitoAberto && <Painel state={state} agora={agora} agir={agir} />}
-        {state.aba === 'painel' && state.leitoAberto && <DetalheProvisorio state={state} agir={agir} />}
+        {state.aba === 'painel' && state.leitoAberto && <DetalheLeito state={state} agora={agora} agir={agir} />}
         {state.aba === 'historico' && <p className="text-secundario">Histórico de eventos: chega na Fase 4.</p>}
         {state.aba === 'projeto' && <p className="text-secundario">Página do projeto: chega na Fase 5.</p>}
       </main>
-    </div>
-  )
-}
-
-// Provisório da Fase 2: a Fase 3 troca pelo detalhe completo do leito.
-function DetalheProvisorio({ state, agir }) {
-  const l = LEITOS[state.leitoAberto]
-  return (
-    <div className="flex flex-col items-start gap-3">
-      <button type="button" onClick={() => agir({ type: 'FECHAR_LEITO' })} className="inline-flex min-h-11 items-center gap-2 rounded border border-linha bg-superficie px-3 font-bold">
-        <ArrowLeft className="size-5" aria-hidden="true" /> Painel
-      </button>
-      <h1 className="text-[28px] font-bold">Leito {l.numero}</h1>
-      <p className="text-secundario">O detalhe do leito (esqueleto, sequência e linha do tempo) chega na Fase 3.</p>
     </div>
   )
 }

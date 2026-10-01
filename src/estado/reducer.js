@@ -132,8 +132,10 @@ export function reducer(state, a) {
     case 'REINICIAR':
       return criarEstadoInicial()
 
-    case 'ABA':
-      return { ...state, aba: a.aba, leitoAberto: a.aba === 'painel' ? state.leitoAberto : null, bastidores: null, dica: null }
+    case 'ABA': {
+      const fimCenario = state.fimCenario || (a.aba === 'historico' && state.etapa === TOTAL_ETAPAS)
+      return { ...state, aba: a.aba, leitoAberto: a.aba === 'painel' ? state.leitoAberto : null, bastidores: null, dica: null, fimCenario }
+    }
 
     case 'TORRE': {
       const posto = POSTOS.find((p) => p.torre === a.torre)
