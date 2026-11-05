@@ -445,3 +445,27 @@ Se algo for ambíguo ou entrar em conflito, decida nesta ordem de prioridade:
 3. escolher a solução mais simples.
 
 Registre a decisão no resumo da fase. Só pergunte ao Ivan quando for bloqueante: credenciais, URL do repositório ou uma preferência visual. Não acrescente funcionalidades que não estão aqui.
+
+## 14. Pitch 2: exceções e acréscimos
+
+Esta seção foi autorizada pelo Ivan para a entrega do Pitch 2 e prevalece sobre as seções 5, 8.1, 10 e 12 só nos pontos abaixo. O roteiro e as abas do protótipo não mudam.
+
+**Exceções**
+
+- `fetch`: permitido só para arquivos do próprio site em `/clipes/`.
+- Botão tocar/pausar: permitido só na aba Pipeline.
+- Webcam: `getUserMedia` e um `<video>` de captura são permitidos só em `src/components/CameraAoVivo.jsx`. O elemento fica oculto, e a imagem nunca é exibida, gravada ou enviada.
+- Dependência: `@mediapipe/tasks-vision`, com versão exata.
+- A busca da seção 12 aceita esses três usos, nesses lugares, e nenhum outro.
+
+**Aba Pipeline**
+
+Quarta aba. Mostra esqueletos reais extraídos offline de vídeos de uma base pública, carregados de `/clipes/`, sobre fundo neutro, com o polígono do leito. Três trilhas: rótulo do dataset, baseline geométrico e modelo (pendente). Controles: tocar/pausar, recomeçar e barra de tempo. A faixa tem texto próprio, porque ali os dados não são fictícios. Os atalhos de seta direita e R não mexem no cenário nessa aba. O contrato do JSON está em `modelo/schema/clipe.schema.json`, no repositório do modelo.
+
+**Câmera ao vivo (demonstração)**
+
+Só no leito 3-310, no detalhe do leito. Ligar e Desligar são explícitos, e a câmera desliga ao sair da tela. Desenha só o esqueleto de 17 pontos. Rótulos fixos: "Pose estimada em tempo real neste notebook. A imagem não sai do dispositivo e não é exibida." e "Classificação de risco: não ativa nesta etapa". Não classifica nem dispara alerta. Precisa de internet para baixar o modelo e o wasm.
+
+**Limites**
+
+Nenhuma métrica de desempenho na interface. O MediaPipe é usado na demonstração, e o estimador do produto continua em avaliação. As demais telas seguem como protótipo com dados fictícios.
