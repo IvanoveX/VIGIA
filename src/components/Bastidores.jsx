@@ -6,6 +6,7 @@ import { POSES } from '../data/poses.js'
 import { ESTADOS, FASES, CANAIS } from '../data/estados.js'
 import { LEITOS, nomeAndar } from '../data/hospital.js'
 import { decimal, duracao } from '../lib/formato.js'
+import { STATUS_MODELO } from '../data/pipeline.js'
 
 const COR_BARRA = { ambar: 'bg-ambar', laranja: 'bg-laranja', vermelho: 'bg-vermelho', calmo: 'bg-secundario' }
 
@@ -125,7 +126,7 @@ export default function Bastidores({ evento, onFechar }) {
                 <Campo rotulo="Saída">
                   <span className="num">17</span> pontos × (x, y, confiança) = <span className="num">51</span> valores
                 </Campo>
-                <Campo rotulo="Estimador">candidatos em avaliação (YOLO-pose, RTMPose, MediaPipe)</Campo>
+                <Campo rotulo="Estimador">MediaPipe na demonstração do pipeline; estimador do produto em avaliação (YOLO-pose, RTMPose, MediaPipe)</Campo>
               </div>
               <div className="w-36 shrink-0 overflow-hidden rounded border border-linha">
                 <Cena id="mini" className="w-full" rotulo="Esqueleto ilustrativo">
@@ -146,6 +147,7 @@ export default function Bastidores({ evento, onFechar }) {
             {movimento && b.probabilidades ? (
               <>
                 <Campo rotulo="Rede temporal">candidatas em avaliação (ST-GCN, LSTM/GRU)</Campo>
+                <Campo rotulo="Status">{STATUS_MODELO}</Campo>
                 <Probabilidades probs={b.probabilidades} limiar={b.limiar} />
               </>
             ) : (

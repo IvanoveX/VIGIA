@@ -26,24 +26,37 @@ function BotaoFaixa({ onClick, icone: Icone, children, destaque = false }) {
   )
 }
 
-export default function FaixaDemo({ indicador, onProxima, onReiniciar, onTelaCheia }) {
+export default function FaixaDemo({ aba, indicador, onProxima, onReiniciar, onTelaCheia }) {
+  const pipeline = aba === 'pipeline'
   return (
     <div className="bg-faixa text-faixa-texto">
       <div className="flex items-center gap-4 px-4 py-1.5">
         <Info className="size-5 shrink-0 opacity-80" aria-hidden="true" />
         <div className="min-w-0 flex-1 leading-tight">
-          <p className="text-[14px] opacity-80">Modo demonstração: protótipo de interface com dados simulados</p>
-          <p className="truncate text-[16px] font-bold" aria-live="polite">
-            {indicador.texto}
-          </p>
+          {pipeline ? (
+            <p className="truncate text-[16px] font-bold">
+              Demonstração do pipeline: esqueleto real extraído offline de vídeo de base pública
+            </p>
+          ) : (
+            <>
+              <p className="text-[14px] opacity-80">Modo demonstração: protótipo de interface com dados simulados</p>
+              <p className="truncate text-[16px] font-bold" aria-live="polite">
+                {indicador.texto}
+              </p>
+            </>
+          )}
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <BotaoFaixa onClick={onProxima} icone={SkipForward} destaque>
-            Próxima etapa
-          </BotaoFaixa>
-          <BotaoFaixa onClick={onReiniciar} icone={RotateCcw}>
-            Reiniciar
-          </BotaoFaixa>
+          {!pipeline && (
+            <>
+              <BotaoFaixa onClick={onProxima} icone={SkipForward} destaque>
+                Próxima etapa
+              </BotaoFaixa>
+              <BotaoFaixa onClick={onReiniciar} icone={RotateCcw}>
+                Reiniciar
+              </BotaoFaixa>
+            </>
+          )}
           <BotaoFaixa onClick={onTelaCheia} icone={Maximize}>
             Tela cheia
           </BotaoFaixa>

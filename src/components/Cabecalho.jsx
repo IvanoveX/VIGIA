@@ -1,4 +1,4 @@
-import { LayoutGrid, History, FileText } from 'lucide-react'
+import { LayoutGrid, History, FileText, ScanLine } from 'lucide-react'
 import Marca from './Marca.jsx'
 import Relogio from './Relogio.jsx'
 import { TONS } from './Selo.jsx'
@@ -8,9 +8,11 @@ const ABAS = [
   { chave: 'painel', rotulo: 'Painel', icone: LayoutGrid },
   { chave: 'historico', rotulo: 'Histórico', icone: History },
   { chave: 'projeto', rotulo: 'Projeto', icone: FileText },
+  { chave: 'pipeline', rotulo: 'Pipeline', icone: ScanLine },
 ]
 
 export default function Cabecalho({ aba, torre, posto, agora, alertasPorTorre, onAba, onTorre, onPosto }) {
+  const pipeline = aba === 'pipeline'
   return (
     <header className="border-b border-linha bg-superficie">
       <div className="flex items-center gap-6 px-4 pt-2">
@@ -34,13 +36,15 @@ export default function Cabecalho({ aba, torre, posto, agora, alertasPorTorre, o
             )
           })}
         </nav>
-        <div className="ml-auto flex items-baseline gap-3 pb-1">
-          <span className="text-[15px] text-secundario">Plantão noturno</span>
-          <Relogio segundos={agora} className="text-[34px] leading-none" />
-        </div>
+        {!pipeline && (
+          <div className="ml-auto flex items-baseline gap-3 pb-1">
+            <span className="text-[15px] text-secundario">Plantão noturno</span>
+            <Relogio segundos={agora} className="text-[34px] leading-none" />
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-linha bg-superficie-2 px-4 py-1.5">
+      {!pipeline && <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-linha bg-superficie-2 px-4 py-1.5">
         <div className="flex items-center gap-2" role="group" aria-label="Torre">
           <span className="text-[15px] text-secundario">Torre</span>
           {TORRES.map((t) => {
@@ -81,7 +85,7 @@ export default function Cabecalho({ aba, torre, posto, agora, alertasPorTorre, o
             ))}
           </select>
         </label>
-      </div>
+      </div>}
     </header>
   )
 }
