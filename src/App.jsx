@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import FaixaDemo from './components/FaixaDemo.jsx'
 import Cabecalho from './components/Cabecalho.jsx'
 import { reducer, criarEstadoInicial } from './estado/reducer.js'
@@ -7,6 +7,7 @@ import DetalheLeito from './components/DetalheLeito.jsx'
 import Historico from './components/Historico.jsx'
 import Projeto from './components/Projeto.jsx'
 import Bastidores from './components/Bastidores.jsx'
+import Pipeline from './components/Pipeline.jsx'
 import CelularPlantao from './components/CelularPlantao.jsx'
 import { alertasDaTorre } from './estado/seletores.js'
 import { indicadorEtapa } from './data/cenario.js'
@@ -27,6 +28,9 @@ function campoDeTexto(el) {
   const tag = el.tagName
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable
 }
+
+// memo: o App re-renderiza a cada 200 ms e a aba tem animação própria.
+const PipelineMemo = memo(Pipeline)
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, criarEstadoInicial)
@@ -52,15 +56,19 @@ export default function App() {
   const proxima = useCallback(() => agir({ type: 'PROXIMA_ETAPA' }), [agir])
 
   // Atalhos: seta para a direita, R e F. Ignorados em campos de texto.
+  // Na aba Pipeline só o F vale: seta e R mexeriam no cenário do protótipo.
+  const abaRef = useRef(state.aba)
+  abaRef.current = state.aba
   useEffect(() => {
     function aoTeclar(e) {
+      const naPipeline = abaRef.current === 'pipeline'
       if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || campoDeTexto(e.target)) return
       if (e.key === 'Escape') {
         fecharBastidores()
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowRight' && !naPipeline) {
         e.preventDefault()
         proxima()
-      } else if (e.key === 'r' || e.key === 'R') {
+      } else if ((e.key === 'r' || e.key === 'R') && !naPipeline) {
         e.preventDefault()
         reiniciar()
       } else if (e.key === 'f' || e.key === 'F') {
@@ -79,7 +87,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      <FaixaDemo indicador={indicadorEtapa(state)} onProxima={proxima} onReiniciar={reiniciar} onTelaCheia={alternarTelaCheia} />
+      <FaixaDemo aba={state.aba} indicador={indicadorEtapa(state)} onProxima={proxima} onReiniciar={reiniciar} onTelaCheia={alternarTelaCheia} />
       <Cabecalho
         aba={state.aba}
         torre={state.torre}
@@ -95,9 +103,10 @@ export default function App() {
         {state.aba === 'painel' && state.leitoAberto && <DetalheLeito state={state} agora={agora} agir={agir} />}
         {state.aba === 'historico' && <Historico state={state} agir={agir} />}
         {state.aba === 'projeto' && <Projeto />}
+        {state.aba === 'pipeline' && <PipelineMemo />}
       </main>
-      {celularVisivel && <CelularPlantao key={state.celular.t} aviso={state.celular} />}
-      {state.bastidores && <Bastidores evento={state.bastidores} onFechar={fecharBastidores} />}
+      {celularVisivel && state.aba !== 'pipeline' && <CelularPlantao key={state.celular.t} aviso={state.celular} />}
+      {state.bastidores && state.aba !== 'pipeline' && <Bastidores evento={state.bastidores} onFechar={fecharBastidores} />}
     </div>
   )
 }
