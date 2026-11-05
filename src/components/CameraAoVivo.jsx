@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, Camera, CameraOff } from 'lucide-react'
 import EsqueletoReal from './EsqueletoReal.jsx'
 import { criarDetector, selecionarCoco, mensagemDeErroCamera, proximoTimestamp } from '../lib/poseAoVivo.js'
-import { ROTULO_PRIVACIDADE, ROTULO_CLASSIFICACAO, ESTADOS_CAMERA } from '../data/cameraAoVivo.js'
+import { ROTULO_PRIVACIDADE, ROTULO_METRICAS, ROTULO_CLASSIFICACAO, ESTADOS_CAMERA } from '../data/cameraAoVivo.js'
 
 const LARGURA = 640
 
@@ -126,6 +126,7 @@ export default function CameraAoVivo({ onVoltar }) {
         </div>
         <video ref={video} muted playsInline aria-hidden="true" style={ESTILO_CAPTURA} />
         <p role="status" className="font-bold">{estado === 'erro' ? erro : ESTADOS_CAMERA[estado]}</p>
+        <p className="text-[15px] text-secundario">{ROTULO_METRICAS}</p>
         <div className="flex flex-wrap gap-2">
           <BotaoCamera icone={Camera} forte onClick={ligar} disabled={estado === 'ligada' || ocupado}>Ligar câmera</BotaoCamera>
           <BotaoCamera icone={CameraOff} onClick={desligar} disabled={estado === 'desligada'}>Desligar câmera</BotaoCamera>

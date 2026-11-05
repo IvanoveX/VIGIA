@@ -18,6 +18,7 @@ O MediaPipe é usado na demonstração; não é o estimador escolhido para o pro
 - **Build:** `npm run build`. Resultado esperado: termina sem erro e cria a pasta `dist/`.
 - **Offline** (sem internet, depois de instalado): `npm run build` e depois `npm run preview`. Vale para o protótipo e a aba Pipeline; a câmera ao vivo não funciona offline.
 - **Câmera ao vivo:** precisa de internet, porque o navegador baixa o modelo de pose e o wasm na hora, e de HTTPS (Vercel) ou `localhost`. Em outro endereço HTTP o navegador bloqueia a câmera. Na primeira vez, permita o uso da câmera quando o navegador perguntar.
+  - Privacidade: a imagem da câmera fica no navegador e não é enviada. Porém, conforme o aviso de privacidade do pacote `@mediapipe/tasks-vision`, a biblioteca envia ao Google métricas de uso e desempenho, sem imagem. A tela mostra esse aviso antes de ligar a câmera.
 
 ## Atalhos da demonstração
 

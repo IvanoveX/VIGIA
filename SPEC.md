@@ -466,6 +466,12 @@ Quarta aba. Mostra esqueletos reais extraídos offline de vídeos de uma base p�
 
 Só no leito 3-310, no detalhe do leito. Ligar e Desligar são explícitos, e a câmera desliga ao sair da tela. Desenha só o esqueleto de 17 pontos. Rótulos fixos: "Pose estimada em tempo real neste notebook. A imagem não sai do dispositivo e não é exibida." e "Classificação de risco: não ativa nesta etapa". Não classifica nem dispara alerta. Precisa de internet para baixar o modelo e o wasm.
 
+**Correções da revisão final**
+
+- F1: as trilhas de baseline e modelo são causais. Cada classe vale a partir do fim da janela de 2 s, por 0,5 s, e a trilha começa vazia (frase nas notas da aba). A trilha de rótulos do dataset não muda.
+- F2: o baseline usa nomes geométricos ("Deitado no leito", "Sentado no leito", "Ereto perto do leito", "Queda", "Fora do leito", "Indefinido"). Só queda e repouso mantêm o tom dos estados do produto; o enum do JSON não muda.
+- F3: a câmera ao vivo mostra, antes de ligar, que a biblioteca de pose envia ao Google métricas de uso e desempenho, sem imagem.
+
 **Limites**
 
 Nenhuma métrica de desempenho na interface. O MediaPipe é usado na demonstração, e o estimador do produto continua em avaliação. As demais telas seguem como protótipo com dados fictícios.

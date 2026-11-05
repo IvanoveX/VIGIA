@@ -1,4 +1,5 @@
 export const ROTULO_PRIVACIDADE = 'Pose estimada em tempo real neste notebook. A imagem não sai do dispositivo e não é exibida.'
+export const ROTULO_METRICAS = 'A biblioteca de pose envia ao Google métricas de uso e desempenho, sem imagem. O modelo e o wasm são baixados da internet.'
 export const ROTULO_CLASSIFICACAO = 'Classificação de risco: não ativa nesta etapa'
 
 export const MSG_PERMISSAO = 'Permissão da câmera negada. Libere o acesso à câmera nas configurações do navegador e tente de novo.'
