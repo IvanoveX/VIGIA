@@ -52,13 +52,15 @@ function useReproducao(duracao) {
   const [tocando, setTocando] = useState(false)
   const tempoRef = useRef(0)
   tempoRef.current = tempo
+  // Em ref para o Recomeçar poder mudar o início com o laço já rodando.
+  const inicioRef = useRef(0)
 
   useEffect(() => {
     if (!tocando) return undefined
-    const inicio = performance.now() - tempoRef.current * 1000
+    inicioRef.current = performance.now() - tempoRef.current * 1000
     let raf
     const passo = (agoraMs) => {
-      const t = Math.min(duracao, (agoraMs - inicio) / 1000)
+      const t = Math.max(0, Math.min(duracao, (agoraMs - inicioRef.current) / 1000))
       setTempo(t)
       if (t >= duracao) setTocando(false)
       else raf = requestAnimationFrame(passo)
@@ -72,6 +74,7 @@ function useReproducao(duracao) {
     setTocando(!tocando)
   }
   const recomecar = () => {
+    inicioRef.current = performance.now()
     setTempo(0)
     setTocando(true)
   }
