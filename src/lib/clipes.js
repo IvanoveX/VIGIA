@@ -40,6 +40,11 @@ export function segmentos(intervalos, chave) {
   return saida
 }
 
+// A classe de uma janela só é conhecida quando ela termina: passa a valer a partir de t_fim, por 0,5 s (o passo).
+export function janelasNoFim(janelas) {
+  return janelas.map((j) => ({ ...j, t_ini: j.t_fim, t_fim: j.t_fim + 0.5 }))
+}
+
 export function trilhas(clipe) {
   return {
     origem: clipe.rotulos_origem,

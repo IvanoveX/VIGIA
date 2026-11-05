@@ -1,4 +1,4 @@
-import { segmentos } from '../lib/clipes.js'
+import { segmentos, janelasNoFim } from '../lib/clipes.js'
 import { estiloBaseline } from '../data/pipeline.js'
 import { TONS } from './Selo.jsx'
 import { duracao as formatarTempo } from '../lib/formato.js'
@@ -36,8 +36,8 @@ function TrilhaPendente({ rotulo }) {
 
 export default function LinhaTempoClipe({ duracao, tempo, trilhas, onBuscar }) {
   const origem = segmentos(trilhas.origem, (r) => r.rotulo)
-  const baseline = segmentos(trilhas.baseline, (j) => j.classe)
-  const modelo = trilhas.modelo.pendente ? null : segmentos(trilhas.modelo, (j) => j.classe)
+  const baseline = segmentos(janelasNoFim(trilhas.baseline), (j) => j.classe)
+  const modelo = trilhas.modelo.pendente ? null : segmentos(janelasNoFim(trilhas.modelo), (j) => j.classe)
   return (
     <div>
       <div className="relative flex flex-col gap-2">

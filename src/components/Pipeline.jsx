@@ -3,7 +3,7 @@ import { Play, Pause, RotateCcw } from 'lucide-react'
 import EsqueletoReal from './EsqueletoReal.jsx'
 import LinhaTempoClipe from './LinhaTempoClipe.jsx'
 import { carregarIndice, carregarClipe, quadroNoTempo, trilhas } from '../lib/clipes.js'
-import { STATUS_MODELO, TEXTO_DADOS, TEXTO_BASELINE, TEXTO_REGRAS } from '../data/pipeline.js'
+import { STATUS_MODELO, TEXTO_DADOS, TEXTO_BASELINE, TEXTO_TRILHA_CAUSAL, TEXTO_REGRAS } from '../data/pipeline.js'
 
 const CARTAO = 'rounded border border-linha bg-superficie p-3'
 
@@ -129,6 +129,7 @@ function NotasDaAba() {
     <div className={`${CARTAO} flex flex-col gap-1.5 text-[14px] leading-tight text-secundario`}>
       <p>{TEXTO_DADOS}</p>
       <p>{TEXTO_BASELINE}</p>
+      <p>{TEXTO_TRILHA_CAUSAL}</p>
       <p>{STATUS_MODELO}</p>
       <p>{TEXTO_REGRAS}</p>
     </div>

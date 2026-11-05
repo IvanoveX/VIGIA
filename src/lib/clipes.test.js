@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { checarClipe, quadroNoTempo, segmentos, trilhas, carregarClipe, carregarIndice } from './clipes.js'
+import { checarClipe, quadroNoTempo, segmentos, janelasNoFim, trilhas, carregarClipe, carregarIndice } from './clipes.js'
 
 // Fixture escrita à mão para teste, não é dado real.
 const pontos = Array.from({ length: 17 }, () => [0.5, 0.5, 0.9])
@@ -99,4 +99,19 @@ test('segmentos: junta trechos vizinhos de mesma chave e deixa lacunas vazias', 
   ]
   const segs = segmentos(janelas, (j) => j.classe)
   assert.deepEqual(segs.map((s) => [s.t_ini, s.t_fim, s.item.classe]), [[0, 1.5, 'repouso'], [3, 4, 'queda']])
+})
+
+test('janelasNoFim: o rótulo passa a valer a partir do fim da janela, por 0,5 s', () => {
+  const janelas = [{ t_ini: 0, t_fim: 2, classe: 'repouso', features: {} }]
+  assert.deepEqual(janelasNoFim(janelas), [{ t_ini: 2, t_fim: 2.5, classe: 'repouso', features: {} }])
+})
+
+test('janelasNoFim com segmentos: passo de 0,5 s deixa o início vazio e junta classes iguais', () => {
+  const janelas = [
+    { t_ini: 0, t_fim: 2, classe: 'repouso' },
+    { t_ini: 0.5, t_fim: 2.5, classe: 'repouso' },
+    { t_ini: 1, t_fim: 3, classe: 'sentando' },
+  ]
+  const segs = segmentos(janelasNoFim(janelas), (j) => j.classe)
+  assert.deepEqual(segs.map((x) => [x.t_ini, x.t_fim, x.item.classe]), [[2, 3, 'repouso'], [3, 3.5, 'sentando']])
 })
