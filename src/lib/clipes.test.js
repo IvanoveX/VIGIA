@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { checarClipe, quadroNoTempo, trilhas, carregarClipe, carregarIndice } from './clipes.js'
+import { checarClipe, quadroNoTempo, segmentos, trilhas, carregarClipe, carregarIndice } from './clipes.js'
 
 // Fixture escrita à mão para teste, não é dado real.
 const pontos = Array.from({ length: 17 }, () => [0.5, 0.5, 0.9])
@@ -77,4 +77,26 @@ test('carregarClipe rejeita HTML com mensagem em pt-BR', async () => {
 
 test('carregarIndice rejeita HTML com mensagem em pt-BR', async () => {
   await assert.rejects(carregarIndice(respostaFalsa(200, '<html>')), /não é um clipe válido|índice/)
+})
+
+test('segmentos: janelas sobrepostas mostram a que começou por último', () => {
+  const janelas = [
+    { t_ini: 0, t_fim: 2, classe: 'repouso' },
+    { t_ini: 0.5, t_fim: 2.5, classe: 'sentando' },
+  ]
+  const segs = segmentos(janelas, (j) => j.classe)
+  assert.deepEqual(
+    segs.map((s) => [s.t_ini, s.t_fim, s.item.classe]),
+    [[0, 0.5, 'repouso'], [0.5, 2.5, 'sentando']],
+  )
+})
+
+test('segmentos: junta trechos vizinhos de mesma chave e deixa lacunas vazias', () => {
+  const janelas = [
+    { t_ini: 0, t_fim: 1, classe: 'repouso' },
+    { t_ini: 0.5, t_fim: 1.5, classe: 'repouso' },
+    { t_ini: 3, t_fim: 4, classe: 'queda' },
+  ]
+  const segs = segmentos(janelas, (j) => j.classe)
+  assert.deepEqual(segs.map((s) => [s.t_ini, s.t_fim, s.item.classe]), [[0, 1.5, 'repouso'], [3, 4, 'queda']])
 })

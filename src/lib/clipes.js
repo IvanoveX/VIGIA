@@ -23,6 +23,23 @@ export function quadroNoTempo(quadros, tempo) {
   return baixo
 }
 
+// Achata intervalos que se sobrepõem: em cada trecho vale o que começou por último.
+// Trechos vizinhos com a mesma chave viram um só.
+export function segmentos(intervalos, chave) {
+  const cortes = [...new Set(intervalos.flatMap((i) => [i.t_ini, i.t_fim]))].sort((a, b) => a - b)
+  const saida = []
+  for (let k = 0; k < cortes.length - 1; k++) {
+    const [ini, fim] = [cortes[k], cortes[k + 1]]
+    const cobrem = intervalos.filter((i) => i.t_ini <= ini && i.t_fim >= fim)
+    if (cobrem.length === 0) continue
+    const item = cobrem.reduce((a, b) => (b.t_ini >= a.t_ini ? b : a))
+    const ultimo = saida.at(-1)
+    if (ultimo && ultimo.t_fim === ini && chave(ultimo.item) === chave(item)) ultimo.t_fim = fim
+    else saida.push({ t_ini: ini, t_fim: fim, item })
+  }
+  return saida
+}
+
 export function trilhas(clipe) {
   return {
     origem: clipe.rotulos_origem,
