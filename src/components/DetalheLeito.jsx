@@ -1,11 +1,16 @@
-import { ArrowLeft, Wifi, WifiOff, Footprints, Check, X, Pause, Bell, Smartphone, Layers } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowLeft, Camera, Wifi, WifiOff, Footprints, Check, X, Pause, Bell, Smartphone, Layers } from 'lucide-react'
 import EsqueletoAnimado from './Esqueleto.jsx'
 import { SequenciaFases, LinhaTempo } from './Sequencia.jsx'
 import Selo from './Selo.jsx'
+import CameraAoVivo from './CameraAoVivo.jsx'
 import { LEITOS, descreverLocal } from '../data/hospital.js'
 import { ESTADOS, FASES, avaliar } from '../data/estados.js'
 import { situacao, tomEfetivo, eventoDoLeito } from '../estado/seletores.js'
 import { decimal, duracao, horario, minutosRestantes } from '../lib/formato.js'
+
+// Único leito com acesso à câmera ao vivo.
+const LEITO_CAMERA = '3-310'
 
 const CANAL = { painel: { rotulo: 'Painel', icone: Bell }, celular: { rotulo: 'Celular do plantão', icone: Smartphone } }
 
@@ -38,6 +43,7 @@ function Botao({ onClick, disabled, icone: Icone, children, forte = false }) {
 }
 
 export default function DetalheLeito({ state, agora, agir }) {
+  const [cameraAberta, setCameraAberta] = useState(false)
   const id = state.leitoAberto
   const leito = LEITOS[id]
   const s = situacao(state, id, agora)
@@ -53,6 +59,8 @@ export default function DetalheLeito({ state, agora, agir }) {
   const faseAtual = FASES.includes(estado) ? estado : 'repouso'
   const tomDe = (seg) => tomEfetivo(seg.estado, avaliar(seg.estado, seg.atenuado))
   const semSinal = leito.sensor === 'sem_sinal' || estado === 'sem_sinal'
+
+  if (cameraAberta) return <CameraAoVivo onVoltar={() => setCameraAberta(false)} />
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -170,6 +178,13 @@ export default function DetalheLeito({ state, agora, agir }) {
             <Botao icone={Pause} disabled={estado === 'pausado' || estado === 'sem_sinal'} onClick={() => agir({ type: 'PAUSAR', leito: id })}>
               Pausar 15 min
             </Botao>
+            {id === LEITO_CAMERA && (
+              <div className="col-span-2">
+                <Botao icone={Camera} onClick={() => setCameraAberta(true)}>
+                  Câmera ao vivo (demonstração)
+                </Botao>
+              </div>
+            )}
           </div>
         </section>
       </div>
