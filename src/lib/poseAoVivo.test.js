@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { INDICES_MEDIAPIPE, VERSAO_WASM, selecionarCoco, mensagemDeErroCamera, proximoTimestamp } from './poseAoVivo.js'
-import { MSG_PERMISSAO, MSG_SEM_CAMERA, MSG_EM_USO, MSG_GENERICA } from '../data/cameraAoVivo.js'
+import { MSG_PERMISSAO, MSG_SEM_CAMERA, MSG_EM_USO, MSG_GENERICA, MSG_MODELO } from '../data/cameraAoVivo.js'
 
 // Fixture de teste: 33 landmarks sintéticos, x = índice/100.
 const landmarks = Array.from({ length: 33 }, (_, i) => ({ x: i / 100, y: 0.5, z: 0, visibility: i === 0 ? 1.7 : 0.8 }))
@@ -29,6 +29,7 @@ test('mensagemDeErroCamera traduz cada tipo de erro', () => {
   assert.equal(mensagemDeErroCamera({ name: 'NotFoundError' }), MSG_SEM_CAMERA)
   assert.equal(mensagemDeErroCamera({ name: 'OverconstrainedError' }), MSG_SEM_CAMERA)
   assert.equal(mensagemDeErroCamera({ name: 'NotReadableError' }), MSG_EM_USO)
+  assert.equal(mensagemDeErroCamera({ name: 'ModeloIndisponivel' }), MSG_MODELO)
   assert.equal(mensagemDeErroCamera(new Error('x')), MSG_GENERICA)
   assert.equal(mensagemDeErroCamera(null), MSG_GENERICA)
 })

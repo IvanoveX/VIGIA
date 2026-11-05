@@ -23,6 +23,8 @@ export function mensagemDeErroCamera(erro) {
     case 'NotFoundError':
     case 'OverconstrainedError':
       return MSG_SEM_CAMERA
+    case 'ModeloIndisponivel':
+      return MSG_MODELO
     case 'NotReadableError':
       return MSG_EM_USO
     default:
@@ -54,6 +56,6 @@ export async function criarDetector() {
       return await criarComDelegate(PoseLandmarker, fileset, 'CPU')
     }
   } catch {
-    throw new Error(MSG_MODELO)
+    throw Object.assign(new Error(MSG_MODELO), { name: 'ModeloIndisponivel' })
   }
 }
