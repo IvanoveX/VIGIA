@@ -8,7 +8,7 @@ const VIAVEL = [
   {
     icone: Database,
     titulo: 'Não depende de dados do hospital',
-    texto: 'Bases públicas (UP-Fall, UR Fall, Le2i, NTU RGB+D) mais cenas gravadas pela equipe em simulação.',
+    texto: 'Base pública (GMDCSA-24, nesta etapa) e cenas simuladas pela equipe, ainda por gravar.',
   },
   {
     icone: ScanLine,
