@@ -9,25 +9,31 @@ const LARGURA = 640
 // Captura oculta: nunca exibida. Fora da tela e com 1 px para o navegador ainda decodificar quadros.
 const ESTILO_CAPTURA = { position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }
 
-function pararStream(video) {
-  video?.srcObject?.getTracks().forEach((t) => t.stop())
+// O stream fica numa ref própria: na desmontagem o React já soltou video.current.
+function pararStream(stream, video) {
+  stream.current?.getTracks().forEach((t) => t.stop())
+  stream.current = null
   if (video) video.srcObject = null
 }
 
 // Laço de detecção: só roda a rede quando o vídeo avançou para um quadro novo.
-function iniciarLaco({ id, execucao, video, detector, quadro, setPontos }) {
+function iniciarLaco({ id, execucao, video, detector, quadro, setPontos, falhar }) {
   let ultimoTempo = -1
   let ultimoTs = -1
   const passo = () => {
     if (id !== execucao.current) return
-    const v = video.current
-    if (v.currentTime !== ultimoTempo && v.readyState >= 2) {
-      ultimoTempo = v.currentTime
-      ultimoTs = proximoTimestamp(ultimoTs, performance.now())
-      const poses = detector.current.detectForVideo(v, ultimoTs).landmarks
-      setPontos(poses.length ? selecionarCoco(poses[0]) : null)
+    try {
+      const v = video.current
+      if (v.currentTime !== ultimoTempo && v.readyState >= 2) {
+        ultimoTempo = v.currentTime
+        ultimoTs = proximoTimestamp(ultimoTs, performance.now())
+        const poses = detector.current.detectForVideo(v, ultimoTs).landmarks
+        setPontos(poses.length ? selecionarCoco(poses[0]) : null)
+      }
+      quadro.current = requestAnimationFrame(passo)
+    } catch (e) {
+      falhar(id, e)
     }
-    quadro.current = requestAnimationFrame(passo)
   }
   passo()
 }
@@ -37,6 +43,7 @@ function useCameraAoVivo() {
   // Token da execução: cada await confere se ela continua válida antes de seguir.
   const execucao = useRef(0)
   const detector = useRef(null)
+  const stream = useRef(null)
   const quadro = useRef(0)
   const [estado, setEstado] = useState('desligada')
   const [erro, setErro] = useState(null)
@@ -47,7 +54,7 @@ function useCameraAoVivo() {
   function liberar() {
     execucao.current += 1
     cancelAnimationFrame(quadro.current)
-    pararStream(video.current)
+    pararStream(stream, video.current)
     detector.current?.close()
     detector.current = null
   }
@@ -61,11 +68,20 @@ function useCameraAoVivo() {
   useEffect(() => liberar, [])
 
   async function abrirCamera(id) {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    if (id !== execucao.current) return stream.getTracks().forEach((t) => t.stop())
-    video.current.srcObject = stream
+    const novo = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    if (id !== execucao.current) return novo.getTracks().forEach((t) => t.stop())
+    stream.current = novo
+    video.current.srcObject = novo
     await video.current.play()
     return id === execucao.current
+  }
+
+  function falhar(id, e) {
+    if (id !== execucao.current) return
+    liberar()
+    setPontos(null)
+    setErro(mensagemDeErroCamera(e))
+    setEstado('erro')
   }
 
   async function ligar() {
@@ -82,12 +98,9 @@ function useCameraAoVivo() {
       if (!(await abrirCamera(id))) return
       setProporcao(video.current.videoHeight / video.current.videoWidth || 3 / 4)
       setEstado('ligada')
-      iniciarLaco({ id, execucao, video, detector, quadro, setPontos })
+      iniciarLaco({ id, execucao, video, detector, quadro, setPontos, falhar })
     } catch (e) {
-      if (id !== execucao.current) return
-      liberar()
-      setErro(mensagemDeErroCamera(e))
-      setEstado('erro')
+      falhar(id, e)
     }
   }
 
