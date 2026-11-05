@@ -13,12 +13,12 @@ const VIAVEL = [
   {
     icone: ScanLine,
     titulo: 'A percepção já existe pronta',
-    texto: 'Estimadores de pose pré-treinados. O que treinamos vê só 51 números por quadro.',
+    texto: 'Estimadores de pose pré-treinados. O modelo que vamos treinar verá só 51 números por quadro.',
   },
   {
     icone: Cpu,
     titulo: 'Hardware barato',
-    texto: 'Webcam e notebook no MVP; Raspberry Pi 5 ou Jetson Orin Nano no piloto.',
+    texto: 'Webcam e notebook no MVP; Raspberry Pi 5 ou Jetson Orin Nano seriam o alvo de um piloto futuro.',
   },
   {
     icone: ShieldCheck,
@@ -31,7 +31,7 @@ const ENTREGAMOS = [
   'Protótipo de interface e fluxo do posto de enfermagem',
   'Estimador de pose rodando sobre vídeo gravado',
   'Rede temporal treinada em bases públicas e cenas simuladas (meta; hoje só há o código de treino)',
-  'Comparação entre regra geométrica e rede temporal',
+  'Comparação entre regra geométrica e rede temporal (meta; depende de modelo treinado)',
   'Resultados dos testes em relatório, descritos como teste de funcionamento',
 ]
 
@@ -40,7 +40,7 @@ const NAO_ENTREGAMOS = ['Uso com paciente real', 'Instalação no HBU', 'Integra
 const MARCOS = [
   { m: 'M1', texto: 'Feito: protótipo de interface e fluxo.' },
   { m: 'M2', texto: 'Feito: quatro clipes reais do GMDCSA-24 com pose e baseline geométrico. Sem classificação temporal.' },
-  { m: 'M3', texto: 'Próximo: modelo contra regra geométrica.' },
+  { m: 'M3', texto: 'Em andamento: código de treino pronto; modelo contra regra geométrica depende de dados próprios.' },
   { m: 'M4', texto: '' },
   { m: 'M5', texto: '' },
 ]
