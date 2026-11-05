@@ -323,7 +323,7 @@ Página sóbria, sem cara de landing page.
   - não depende de dados do hospital: bases públicas (UP-Fall, UR Fall, Le2i, NTU RGB+D) mais cenas gravadas pela equipe em simulação;
   - a percepção já existe pronta (estimadores de pose pré-treinados), e o que treinamos vê só 51 números por quadro;
   - hardware barato: webcam e notebook no MVP; Raspberry Pi 5 ou Jetson Orin Nano no piloto;
-  - LGPD por arquitetura.
+  - Privacidade pelo desenho.
 - **"Escopo do semestre":** o que entregamos e o que não entregamos, em duas listas curtas, coerentes com o Pitch 0 (sem paciente real, sem instalação no HBU, sem integração com prontuário). A frase "precisão e recall reportados no fim do semestre" é permitida aqui.
 - **"Onde estamos":** uma linha de M1 a M5, com o marcador "Agora: M1".
   - Feito: protótipo de interface e fluxo.

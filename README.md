@@ -29,6 +29,8 @@ O MediaPipe é usado na demonstração; não é o estimador escolhido para o pro
 | F | Tela cheia |
 | Esc | Fechar os bastidores |
 
+Na aba Pipeline, a seta para a direita e o R não valem. O F também não responde com o foco na barra de tempo: use o botão Tela cheia.
+
 Os botões "Próxima etapa", "Reiniciar" e "Tela cheia" ficam na faixa do topo. Recarregar a página (F5) também volta ao início.
 
 ## Roteiro

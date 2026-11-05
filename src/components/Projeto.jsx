@@ -22,7 +22,7 @@ const VIAVEL = [
   },
   {
     icone: ShieldCheck,
-    titulo: 'LGPD por arquitetura',
+    titulo: 'Privacidade pelo desenho',
     texto: 'A imagem é descartada no dispositivo. Só esqueletos e metadados saem do quarto.',
   },
 ]

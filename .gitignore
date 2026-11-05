@@ -8,3 +8,5 @@ dist
 *.mov
 *.task
 .superpowers/
+*.jpg
+*.jpeg
