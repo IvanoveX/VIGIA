@@ -36,7 +36,8 @@ function useClipes() {
   useEffect(() => {
     let ativo = true
     carregarIndice()
-      .then((indice) => Promise.all(indice.map((c) => carregarClipe(c.id))))
+      // O título só existe no índice; o clipe não tem esse campo.
+      .then((indice) => Promise.all(indice.map((c) => carregarClipe(c.id).then((clipe) => ({ ...clipe, titulo: c.titulo })))))
       .then((clipes) => ativo && setEstado({ carregando: false, erro: null, clipes }))
       .catch((e) => ativo && setEstado({ carregando: false, erro: e.message, clipes: [] }))
     return () => {
@@ -102,7 +103,7 @@ function ListaClipes({ clipes, atual, onEscolher }) {
             i === atual ? 'border-marca bg-marca text-white' : 'border-linha bg-superficie text-tinta hover:border-secundario'
           }`}
         >
-          {c.id_clipe}
+          {c.titulo}
         </button>
       ))}
     </div>
