@@ -1,6 +1,9 @@
 import { Database, ScanLine, Cpu, ShieldCheck, Check, Minus } from 'lucide-react'
 import { SimboloVigia } from './Marca.jsx'
 
+// Marco em andamento: o selo "Agora" sai daqui.
+const MARCO_ATUAL = 'M3'
+
 const VIAVEL = [
   {
     icone: Database,
@@ -27,17 +30,17 @@ const VIAVEL = [
 const ENTREGAMOS = [
   'Protótipo de interface e fluxo do posto de enfermagem',
   'Estimador de pose rodando sobre vídeo gravado',
-  'Rede temporal treinada em bases públicas e cenas simuladas',
+  'Rede temporal treinada em bases públicas e cenas simuladas (meta; hoje só há o código de treino)',
   'Comparação entre regra geométrica e rede temporal',
-  'Precisão e recall reportados no fim do semestre',
+  'Resultados dos testes em relatório, descritos como teste de funcionamento',
 ]
 
 const NAO_ENTREGAMOS = ['Uso com paciente real', 'Instalação no HBU', 'Integração com prontuário', 'Aplicativo de celular separado']
 
 const MARCOS = [
-  { m: 'M1', texto: 'Feito: protótipo de interface e fluxo.', agora: true },
-  { m: 'M2', texto: 'Próximo: bases públicas processadas e estimador de pose rodando sobre vídeo gravado.' },
-  { m: 'M3', texto: 'Demonstração: modelo contra regra geométrica.' },
+  { m: 'M1', texto: 'Feito: protótipo de interface e fluxo.' },
+  { m: 'M2', texto: 'Feito: quatro clipes reais do GMDCSA-24 com pose e baseline geométrico. Sem classificação temporal.' },
+  { m: 'M3', texto: 'Próximo: modelo contra regra geométrica.' },
   { m: 'M4', texto: '' },
   { m: 'M5', texto: '' },
 ]
@@ -104,7 +107,9 @@ export default function Projeto() {
         </h2>
         <ol className="relative grid grid-cols-5">
           <span className="absolute left-[10%] right-[10%] top-[18px] h-0.5 bg-linha" aria-hidden="true" />
-          {MARCOS.map(({ m, texto, agora }) => (
+          {MARCOS.map(({ m, texto }) => {
+            const agora = m === MARCO_ATUAL
+            return (
             <li key={m} className="relative flex flex-col items-center px-2 text-center">
               <span
                 className={`num relative flex size-9 items-center justify-center rounded-full border-2 font-bold ${
@@ -113,10 +118,11 @@ export default function Projeto() {
               >
                 {m}
               </span>
-              {agora && <span className="mt-1 rounded bg-tinta px-1.5 text-[14px] font-bold text-superficie">Agora: M1</span>}
+              {agora && <span className="mt-1 rounded bg-tinta px-1.5 text-[14px] font-bold text-superficie">Agora: {MARCO_ATUAL}</span>}
               {texto && <p className={`mt-1 text-[15px] leading-snug ${agora ? '' : 'text-secundario'}`}>{texto}</p>}
             </li>
-          ))}
+            )
+          })}
         </ol>
       </section>
 
